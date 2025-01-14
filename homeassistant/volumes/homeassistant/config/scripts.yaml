@@ -1,0 +1,36 @@
+confirmable_notification:
+  alias: Confirmable Notification
+  use_blueprint:
+    path: homeassistant/confirmable_notification.yaml
+    input:
+      notify_device: 7545d2455caeced5b281a3efa07606ae
+      title: Notificación confirmable
+      message: Esta es una notificación con confirmación
+  description: ''
+  icon: mdi:account-question
+apagar_tras_trabajo:
+  alias: Apagar tras trabajo
+  use_blueprint:
+    path: samuelthng/notifications.yaml
+    input:
+      notify_device: 7545d2455caeced5b281a3efa07606ae
+      title: Se terminó la jornada
+      message: Se acabó la jornada, voy a apagarlo todo
+      confirm_text: Vale, apaga
+      confirm_action:
+      - action: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          area_id: dormitorio
+      dismiss_text: No, no apagues nada
+      option_three_enabled: false
+      timeout_action:
+      - action: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          area_id: dormitorio
+      clear_on_timeout: true
+      interruption_level: critical
+  description: ''

@@ -1,0 +1,273 @@
+- id: '1731849322802'
+  alias: Calentar la casa
+  description: ''
+  triggers:
+  - type: temperature
+    device_id: 876f69d95383a85514ae958bce89f47f
+    entity_id: 55139e34fbe256dfd74036e1be7d2cbf
+    domain: sensor
+    trigger: device
+    below: 21
+  - type: temperature
+    device_id: d22d5753d75c0a66139fb7ac4a815474
+    entity_id: 6dc7a60362eb770fcb3249520d4bfde3
+    domain: sensor
+    trigger: device
+    below: 20
+  conditions:
+  - condition: or
+    conditions:
+    - condition: zone
+      entity_id: device_tracker.iphone_de_sara
+      zone: zone.home
+    - condition: zone
+      entity_id: device_tracker.iphone_de_roman
+      zone: zone.home
+  actions:
+  - action: climate.set_temperature
+    metadata: {}
+    data:
+      hvac_mode: heat
+      temperature: 22
+    target:
+      device_id: dc54dccf7a211cb28f161cdab8762b39
+  - action: notify.mobile_app_iphone_de_roman
+    metadata: {}
+    data:
+      title: La casa está fría
+      message: 'La habitacion esta a 20°
+
+        He encenciendo climatizador a 22°'
+  - action: notify.mobile_app_iphone_de_sara
+    metadata: {}
+    data:
+      message: La habitacion esta a 20°He encenciendo climatizador a 22°
+      title: La casa está fría
+  mode: single
+- id: '1731918141470'
+  alias: Encender por la noche
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+    offset: 0
+  conditions:
+  - condition: or
+    conditions:
+    - condition: zone
+      entity_id: device_tracker.iphone_de_sara
+      zone: zone.home
+    - condition: zone
+      entity_id: device_tracker.iphone_de_roman
+      zone: zone.home
+  - condition: not
+    conditions:
+    - condition: device
+      type: is_on
+      device_id: f6352bfb7a830c9ea821a912862136c1
+      entity_id: 2f9ba86b5631fb1fb58be5d51eaf4417
+      domain: remote
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      area_id: salon
+  - action: notify.mobile_app_iphone_de_roman
+    metadata: {}
+    data:
+      message: Se ha hecho de noche, voy a encender la luz
+      title: Luz salon encendida
+  mode: single
+- id: '1731921724635'
+  alias: Apagar por la noche
+  description: ''
+  triggers:
+  - trigger: time
+    at: sensor.sun_next_midnight
+  conditions:
+  - condition: device
+    type: is_off
+    device_id: f6352bfb7a830c9ea821a912862136c1
+    entity_id: 2f9ba86b5631fb1fb58be5d51eaf4417
+    domain: remote
+  actions:
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      area_id:
+      - salon
+      - dormitorio
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      area_id:
+      - dormitorio
+      - salon
+  mode: single
+- id: '1731942147065'
+  alias: Apagar todo cuando la casa esta vacia
+  description: ''
+  triggers:
+  - device_id: 7545d2455caeced5b281a3efa07606ae
+    domain: device_tracker
+    entity_id: 91fabc83621d55c9931eed1f12963254
+    type: leaves
+    trigger: device
+    zone: zone.home
+  - device_id: 020ee4eda9e88905b3695cb269bbb952
+    domain: device_tracker
+    entity_id: 26e026ebb7f4ae902a321012c0cf5615
+    type: leaves
+    trigger: device
+    zone: zone.home
+  conditions:
+  - condition: and
+    conditions:
+    - condition: device
+      device_id: 7545d2455caeced5b281a3efa07606ae
+      domain: device_tracker
+      entity_id: 91fabc83621d55c9931eed1f12963254
+      type: is_not_home
+    - condition: device
+      device_id: 020ee4eda9e88905b3695cb269bbb952
+      domain: device_tracker
+      entity_id: 26e026ebb7f4ae902a321012c0cf5615
+      type: is_not_home
+  actions:
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      area_id:
+      - salon
+      - dormitorio
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      area_id:
+      - dormitorio
+      - salon
+  - action: climate.turn_off
+    metadata: {}
+    data: {}
+    target:
+      area_id: toda_la_casa
+  - action: notify.mobile_app_iphone_de_roman
+    metadata: {}
+    data:
+      message: La casa esta vacia, voy a apagar todos los interruptores
+      title: Apagando todo
+  - action: notify.mobile_app_iphone_de_sara
+    metadata: {}
+    data:
+      title: Apagando todo
+      message: La casa esta vacia, voy a apagar todos los interruptores
+  mode: single
+- id: '1732259993616'
+  alias: Encender el trabajo
+  description: ''
+  triggers:
+  - trigger: time
+    at: 07:00:00
+  conditions:
+  - condition: device
+    device_id: 7545d2455caeced5b281a3efa07606ae
+    domain: device_tracker
+    entity_id: 91fabc83621d55c9931eed1f12963254
+    type: is_home
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    after: 06:00:00
+    before: 08:00:00
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.grande_enchufe_1
+      - switch.grande_enchufe_2
+      - switch.grande_enchufe_3
+  mode: single
+- id: '1732268903750'
+  alias: Apagar tras trabajo
+  description: ''
+  triggers:
+  - trigger: time
+    at: '18:00:00'
+  conditions:
+  - condition: device
+    device_id: 7545d2455caeced5b281a3efa07606ae
+    domain: device_tracker
+    entity_id: 91fabc83621d55c9931eed1f12963254
+    type: is_home
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  actions:
+  - action: script.apagar_tras_trabajo
+    metadata: {}
+    data:
+      field_notify_device: 7545d2455caeced5b281a3efa07606ae
+      field_title: Se terminó la jornada
+      field_message: Se acabó la jornada, voy a apagarlo todo
+      field_timeout:
+        hours: 0
+        minutes: 15
+        seconds: 0
+      field_option_one_enabled: true
+      field_option_two_enabled: true
+  mode: single
+- id: '1732570601311'
+  alias: Encender al llegar a casa por la noche
+  description: ''
+  triggers:
+  - device_id: 020ee4eda9e88905b3695cb269bbb952
+    domain: device_tracker
+    entity_id: 26e026ebb7f4ae902a321012c0cf5615
+    type: enters
+    trigger: device
+    zone: zone.home
+  - trigger: zone
+    entity_id: person.roman
+    zone: zone.home
+    event: enter
+  conditions:
+  - condition: sun
+    before: sunrise
+    after: sunset
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      area_id: salon
+  mode: single
+- id: '1735640787941'
+  alias: Apagar luces cuando sale el sol
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunrise
+    offset: '1:0:0'
+  conditions: []
+  actions:
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      area_id: salon
+  mode: single

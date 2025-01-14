@@ -1,0 +1,27 @@
+services:
+
+  # samba:
+  #   image: dperson/samba:rpi
+  #   restart: always
+  #   command: '-u "roman;RoMaN" -s "media;/media;yes;no" -s "downloads;/downloads;yes;no"'
+  #   stdin_open: true
+  #   tty: true
+  #   ports:
+  #     - 139:139
+  #     - 445:445
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime
+  #     - /home/roman/media:/media
+  #     - /home/roman/downloads:/downloads
+
+  rtorrent:
+    image: pablokbs/rutorrent-armhf
+    ports:
+      - 8088:80
+      - 51413:51413
+      - 6881:6881/udp
+    volumes:
+      - ~/docker/torrents/torrents-config/rtorrent:/config/rtorrent
+      # - /home/roman/downloads:/downloads
+      - /home/roman/downloads:/downloads
+    restart: always

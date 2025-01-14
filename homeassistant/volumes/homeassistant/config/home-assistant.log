@@ -1,0 +1,5 @@
+2025-01-10 21:40:08.414 WARNING (Recorder) [homeassistant.components.recorder.util] The system could not validate that the sqlite3 database at //config/home-assistant_v2.db was shutdown cleanly
+2025-01-10 21:40:18.326 WARNING (MainThread) [homeassistant.setup] Setup of recorder is taking over 10 seconds.
+2025-01-10 21:40:19.001 WARNING (Recorder) [homeassistant.components.recorder.util] Ended unfinished session (id=22 from 2025-01-10 20:15:23.842785)
+2025-01-10 21:40:45.939 WARNING (MainThread) [homeassistant.setup] Setup of stream is taking over 10 seconds.
+2025-01-10 21:40:51.953 ERROR (MainThread) [homeassistant.components.automation] Automation with alias 'Calentar la casa' failed to setup triggers and has been disabled: Unknown device 'd22d5753d75c0a66139fb7ac4a815474'
